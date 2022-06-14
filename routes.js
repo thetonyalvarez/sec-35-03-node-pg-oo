@@ -22,6 +22,7 @@ router.get("/", async function(req, res, next) {
 
 router.get("/add/", async function(req, res, next) {
   try {
+    console.log(res)
     return res.render("customer_new_form.html");
   } catch (err) {
     return next(err);
