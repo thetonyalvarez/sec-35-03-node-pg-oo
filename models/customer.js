@@ -71,7 +71,7 @@ class Customer {
 
     const { firstName, lastName } = results.rows[0];
 
-    return " ".join(firstName, lastName)
+    return [firstName, lastName].join(" ")
   }
 
   /** get all reservations for this customer. */
