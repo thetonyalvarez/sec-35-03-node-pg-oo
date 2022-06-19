@@ -29,6 +29,28 @@ class Customer {
     return results.rows.map(c => new Customer(c));
   }
 
+  /** search for customer */
+  static async search(query_text) {
+    const results = await db.query(`
+      SELECT id, 
+      first_name AS "firstName",  
+      last_name AS "lastName", 
+      phone, 
+      notes
+      FROM customers
+      WHERE first_name ILIKE '%' || $1 || '%'
+      OR last_name ILIKE '%' || $1 || '%'
+    `, [query_text.q])
+
+    if (results === undefined) {
+      const err = new Error(`No customers found for ${query_text.q}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return results.rows.map(c => new Customer(c));
+  }
+
   /** get a customer by ID. */
 
   static async get(id) {
@@ -99,6 +121,7 @@ class Customer {
       );
     }
   }
+
 }
 
 module.exports = Customer;

@@ -6,6 +6,10 @@
 
 <h1>Customers</h1>
 
+{% if query %}
+<p>Search results for: <span>{{query}}</span></p>
+{% endif %}
+
 <ul style="column-count: 4">
   {% for customer in customers %}
   <li><a href="/{{ customer.id }}/">{{ customer.firstName }} {{ customer.lastName }}</a></li>
