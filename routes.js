@@ -22,7 +22,6 @@ router.get("/", async function(req, res, next) {
 
 router.get("/add/", async function(req, res, next) {
   try {
-    console.log(res)
     return res.render("customer_new_form.html");
   } catch (err) {
     return next(err);
@@ -37,7 +36,8 @@ router.post("/add/", async function(req, res, next) {
     const lastName = req.body.lastName;
     const phone = req.body.phone;
     const notes = req.body.notes;
-
+    
+    console.log("inside try", firstName)
     const customer = new Customer({ firstName, lastName, phone, notes });
     await customer.save();
 
