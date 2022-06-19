@@ -83,6 +83,7 @@ describe('Customer Model', () => {
 			expect(err).toEqual(err);
 		}
 	})
+	
 })
 
 afterAll(async function () {
