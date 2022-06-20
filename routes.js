@@ -27,7 +27,8 @@ router.get("/", async function(req, res, next) {
 
 router.get("/top-ten/", async function(req, res, next) {
   try {
-    const customers = await Customer.topTen()
+    const customers = await Customer.topTen();
+    console.log(customers)
     return res.render("customer_list.html", { customers, heading: 'Top 10 Customers' } );
 
   } catch (err) {
