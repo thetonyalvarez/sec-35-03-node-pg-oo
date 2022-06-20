@@ -19,10 +19,10 @@ class Customer {
   static async all() {
     const results = await db.query(
       `SELECT id, 
-         first_name AS "firstName",  
-         last_name AS "lastName", 
-         phone, 
-         notes
+        first_name AS "firstName",  
+        last_name AS "lastName", 
+        phone, 
+        notes
        FROM customers
        ORDER BY last_name, first_name`
     );
@@ -94,6 +94,32 @@ class Customer {
     const { firstName, lastName } = results.rows[0];
 
     return [firstName, lastName].join(" ")
+  }
+
+  /** get top 10 customers */
+  static async topTen() {
+    const results = await db.query(`
+      SELECT
+        customers.first_name AS "firstName",  
+        customers.last_name AS "lastName", 
+        customers.phone AS "phone", 
+        customers.notes AS "notes",
+        COUNT(customer_id) total_reservations
+      FROM reservations
+      INNER JOIN customers
+      ON reservations.customer_id = customers.id
+      GROUP BY first_name, last_name, phone, customers.notes, customer_id
+      ORDER BY COUNT(customer_id) desc
+      LIMIT 10
+    `)
+
+    if (results.rows[0] === undefined) {
+      const err = new Error(`No such customer: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return results.rows.map(c => new Customer(c));
   }
 
   /** get all reservations for this customer. */

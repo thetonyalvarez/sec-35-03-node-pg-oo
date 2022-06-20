@@ -8,7 +8,7 @@ const request = require("supertest");
 // app imports
 const app = require("../app");
 const db = require("../db");
-const { setUp } = require("../__test_setup");
+const { setUp, addTenNewRecords } = require("../__test_setup");
 
 const Customer = require("../models/customer");
 
@@ -68,13 +68,13 @@ describe('Customer Model', () => {
 
 		const resp = await Customer.get(3);
 		expect(resp.firstName).toEqual('edited_firstName')
-	})
+	});
 	it("should search for customer", async () => {
 		const query = {q: 'anthony'}
 		const resp = await Customer.search(query)
 
 		expect(resp[0].lastName).toEqual('Gonzales')
-	})
+	});
 	it("should return message if no results found in search", async () => {
 		try {
 			const query = {q: 'nothing'}
@@ -82,6 +82,20 @@ describe('Customer Model', () => {
 		} catch (err) {
 			expect(err).toEqual(err);
 		}
+	});
+	it("should return top 10 customers by number of reservations", async () => {
+		addTenNewRecords();
+		const resp = await Customer.topTen()
+		expect(resp[0].firstName).toEqual('FName5')
+		expect(resp[2].firstName).toEqual('Crystal')
+		expect(resp[9].firstName).toEqual('FName12')
+		expect(resp[10]).toBeUndefined()
+	});
+	it("should return all customers if there are not at least 10", async () => {
+		const resp = await Customer.topTen()
+		expect(resp[0].firstName).toEqual('Anthony')
+		expect(resp[2].firstName).toEqual('Joseph')
+		expect(resp[9]).toBeUndefined()
 	})
 })
 
