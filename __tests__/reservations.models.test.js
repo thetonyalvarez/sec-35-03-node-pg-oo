@@ -33,17 +33,28 @@ describe('Reservations Model', () => {
 		const resp = await Reservation.getReservationsForCustomer(1);
 		expect(resp[2].notes).toEqual('test_notes')
 	});
-	it("should update existing reservation", async () => {
+	it("should show notes using getter", async () => {
 		const all_reservations = await Reservation.getReservationsForCustomer(1);
-		const test_res = all_reservations[1];
+		const test_res = all_reservations[0];
+
+		expect(test_res.notes).toContain('Decade')
+	});
+	it("should update notes using setter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
 		
 		test_res.notes = 'updated notes';
 		
-		await test_res.save();
-		
-		const resp = await Reservation.getReservationsForCustomer(1);
-		expect(resp[1].notes).toEqual('updated notes')
-	})
+		expect(test_res.notes).toEqual('updated notes')
+	});
+	it("should assign empty string if notes is falsey value", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		test_res.notes = false;
+
+		expect(test_res.notes).toEqual('') 	
+	});
 	it("should show numGuests using getter", async () => {
 		const all_reservations = await Reservation.getReservationsForCustomer(1);
 		const test_res = all_reservations[1];

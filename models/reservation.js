@@ -16,6 +16,18 @@ class Reservation {
     this.notes = notes;
   }
 
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    if (value === false) {
+      value = '';
+      this._notes = value;
+    }
+    this._notes = value;
+  }
+
   get numGuests() {
     return this._numGuests;
   }
