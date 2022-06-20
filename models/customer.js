@@ -17,6 +17,18 @@ class Customer {
   get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
+  
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    if (value === false) {
+      value = '';
+      this._notes = value;
+    }
+    this._notes = value;
+  }
 
   /** find all customers. */
 

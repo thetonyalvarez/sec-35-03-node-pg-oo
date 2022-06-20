@@ -88,6 +88,25 @@ describe('Customer Model', () => {
 		expect(resp[2].firstName).toEqual('Joseph')
 		expect(resp[9]).toBeUndefined()
 	})
+	it("should show notes using getter", async () => {
+		const resp = await Customer.get(1);
+
+		expect(resp.notes).toContain('Money')
+	});
+	it("should update notes using setter", async () => {
+		const resp = await Customer.get(1);
+		
+		resp.notes = 'updated notes';
+		
+		expect(resp.notes).toEqual('updated notes')
+	});
+	it("should assign empty string if notes is falsey value", async () => {
+		const resp = await Customer.get(1);
+
+		resp.notes = false;
+
+		expect(resp.notes).toEqual('')
+	});
 })
 
 afterAll(async function () {

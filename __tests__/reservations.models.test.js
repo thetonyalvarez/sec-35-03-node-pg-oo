@@ -53,7 +53,7 @@ describe('Reservations Model', () => {
 
 		test_res.notes = false;
 
-		expect(test_res.notes).toEqual('') 	
+		expect(test_res.notes).toEqual('')
 	});
 	it("should show numGuests using getter", async () => {
 		const all_reservations = await Reservation.getReservationsForCustomer(1);
