@@ -16,6 +16,45 @@ class Reservation {
     this.notes = notes;
   }
 
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    if (value === false) {
+      value = '';
+      this._notes = value;
+    }
+    this._notes = value;
+  }
+
+  get numGuests() {
+    return this._numGuests;
+  }
+
+  set numGuests(value) {
+    if (value < 1) throw new Error("You must set at least 1 guest.");
+    this._numGuests = value;
+  }
+
+  get startAt() {
+    return this._startAt;
+  }
+
+  set startAt(date) {
+    if (!(date instanceof Date)) throw new Error("Value must be a valid date.");
+    this._startAt = date;
+  }
+
+  get customerId() {
+    return this._customerId;
+  }
+
+  set customerId(id) {
+    if (this._customerId) throw new Error(`Customer ID for this reservation cannot be changed.`);
+    this._customerId = id;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {

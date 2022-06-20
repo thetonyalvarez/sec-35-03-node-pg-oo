@@ -14,18 +14,56 @@ class Customer {
     this.notes = notes;
   }
 
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+  
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    if (value === false) {
+      value = '';
+      this._notes = value;
+    }
+    this._notes = value;
+  }
+
   /** find all customers. */
 
   static async all() {
     const results = await db.query(
       `SELECT id, 
-         first_name AS "firstName",  
-         last_name AS "lastName", 
-         phone, 
-         notes
+        first_name AS "firstName",  
+        last_name AS "lastName", 
+        phone, 
+        notes
        FROM customers
        ORDER BY last_name, first_name`
     );
+    return results.rows.map(c => new Customer(c));
+  }
+
+  /** search for customer */
+  static async search(query_text) {
+    const results = await db.query(`
+      SELECT id, 
+      first_name AS "firstName",  
+      last_name AS "lastName", 
+      phone, 
+      notes
+      FROM customers
+      WHERE first_name ILIKE '%' || $1 || '%'
+      OR last_name ILIKE '%' || $1 || '%'
+    `, [query_text.q])
+
+    if (results === undefined) {
+      const err = new Error(`No customers found for ${query_text.q}`);
+      err.status = 404;
+      throw err;
+    }
+
     return results.rows.map(c => new Customer(c));
   }
 
@@ -53,15 +91,23 @@ class Customer {
     return new Customer(customer);
   }
 
-  /** get full name of customer. */
-  static async fullName(id) {
-    const results = await db.query(
-      `
-      SELECT first_name AS "firstName", last_name AS "lastName"
-      FROM customers
-      WHERE id=$1
-      `, [id]
-    )
+  /** get top 10 customers */
+  static async topTen() {
+    const results = await db.query(`
+      SELECT
+        customers.first_name AS "firstName",  
+        customers.last_name AS "lastName", 
+        customers.phone AS "phone", 
+        customers.notes AS "notes",
+        customers.id,
+        COUNT(customer_id) total_reservations
+      FROM reservations
+      INNER JOIN customers
+      ON reservations.customer_id = customers.id
+      GROUP BY first_name, last_name, phone, customers.notes, customers.id
+      ORDER BY COUNT(customer_id) desc
+      LIMIT 10
+    `)
 
     if (results.rows[0] === undefined) {
       const err = new Error(`No such customer: ${id}`);
@@ -69,9 +115,7 @@ class Customer {
       throw err;
     }
 
-    const { firstName, lastName } = results.rows[0];
-
-    return [firstName, lastName].join(" ")
+    return results.rows.map(c => new Customer(c));
   }
 
   /** get all reservations for this customer. */
@@ -99,6 +143,7 @@ class Customer {
       );
     }
   }
+
 }
 
 module.exports = Customer;
