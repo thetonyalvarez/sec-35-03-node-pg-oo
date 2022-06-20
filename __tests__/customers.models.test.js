@@ -88,7 +88,6 @@ describe('Customer Model', () => {
 		const resp = await Customer.topTen()
 		expect(resp[0].firstName).toEqual('FName5')
 		expect(resp[2].firstName).toEqual('Crystal')
-		expect(resp[9].firstName).toEqual('FName12')
 		expect(resp[10]).toBeUndefined()
 	});
 	it("should return all customers if there are not at least 10", async () => {

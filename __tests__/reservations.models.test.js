@@ -37,14 +37,38 @@ describe('Reservations Model', () => {
 		const all_reservations = await Reservation.getReservationsForCustomer(1);
 		const test_res = all_reservations[1];
 		
-		test_res.numGuests = 10;
+		test_res.notes = 'updated notes';
 		
 		await test_res.save();
 		
 		const resp = await Reservation.getReservationsForCustomer(1);
-		expect(resp[1].numGuests).toEqual(10)
-		expect(resp[1].numGuests).not.toEqual(3)
+		expect(resp[1].notes).toEqual('updated notes')
 	})
+	it("should show numGuests using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+		
+		expect(test_res.numGuests).toEqual(3)
+	});
+	it("should update numGuests using setter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+		
+		test_res.numGuests = 10;
+		
+		expect(test_res.numGuests).toEqual(10)
+	});
+	it("should throw error if numGuests is less than 1", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+
+		try {
+			test_res.numGuests = 0;
+		} catch (err) {
+			expect(err).toEqual(err);
+		}
+	});
+
 })
 
 afterAll(async function () {
