@@ -23,6 +23,18 @@ router.get("/", async function(req, res, next) {
   }
 });
 
+/** Get Top 10 customers. */
+
+router.get("/top-ten/", async function(req, res, next) {
+  try {
+    const customers = await Customer.topTen()
+    return res.render("customer_list.html", { customers, heading: 'Top 10 Customers' } );
+
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function(req, res, next) {

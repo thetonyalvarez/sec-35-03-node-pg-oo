@@ -4,7 +4,11 @@
 
 <a class="btn btn-primary" style="float: right" href="/add/">Add a Customer</a></p>
 
+{% if heading %}
+<h1>{{heading}}</h1>
+{% else %}
 <h1>Customers</h1>
+{% endif %}
 
 {% if query %}
 <p>Search results for: <span>{{query}}</span></p>
