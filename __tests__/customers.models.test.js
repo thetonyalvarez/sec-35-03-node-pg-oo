@@ -32,8 +32,8 @@ describe('Customer Model', () => {
 		}
 	})
 	it("should return full name concatenated together", async () => {
-		const resp = await Customer.fullName(1);
-		expect(resp).toEqual('Anthony Gonzales')
+		const resp = await Customer.get(1);
+		expect(resp.fullName).toEqual('Anthony Gonzales')
 		
 	})
 	it("should show error if no id found for .fullName()", async () => {
