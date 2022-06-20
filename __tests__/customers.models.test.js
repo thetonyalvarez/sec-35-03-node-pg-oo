@@ -36,14 +36,6 @@ describe('Customer Model', () => {
 		expect(resp.fullName).toEqual('Anthony Gonzales')
 		
 	})
-	it("should show error if no id found for .fullName()", async () => {
-		try {
-			const resp = await Customer.fullName(9999);
-			expect(resp.status).toEqual(404)
-		} catch (err) {
-			expect(err).toEqual(err);
-		}
-	})
 	it("should get reservations for a customer", async () => {
 		const customer = await Customer.get(1);
 		const resp = await customer.getReservations(1);
@@ -78,7 +70,7 @@ describe('Customer Model', () => {
 	it("should return message if no results found in search", async () => {
 		try {
 			const query = {q: 'nothing'}
-			const resp = await Customer.search(query)
+			await Customer.search(query)
 		} catch (err) {
 			expect(err).toEqual(err);
 		}

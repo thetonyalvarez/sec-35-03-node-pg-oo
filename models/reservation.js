@@ -25,6 +25,15 @@ class Reservation {
     this._numGuests = value;
   }
 
+  get startAt() {
+    return this._startAt;
+  }
+
+  set startAt(date) {
+    if (!(date instanceof Date)) throw new Error("Value must be a valid date.");
+    this._startAt = date;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {

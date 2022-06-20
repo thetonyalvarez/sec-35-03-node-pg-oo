@@ -24,7 +24,7 @@ describe('Reservations Model', () => {
 		const reservation = new Reservation({
 			customerId: 1,
 			numGuests: 4,
-			startAt: new Date(),
+			startAt: new Date('September 20, 2020 11:13:00'),
 			notes: 'test_notes'
 		});
 
@@ -64,6 +64,32 @@ describe('Reservations Model', () => {
 
 		try {
 			test_res.numGuests = 0;
+		} catch (err) {
+			expect(err).toEqual(err);
+		}
+	});
+	it("should show Date using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		expect(test_res.startAt instanceof Date).toEqual(true)
+	});
+	it("should update Date using setter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		const newDate = new Date('December 20, 2020 11:13:00');
+
+		test_res.startAt = newDate;
+
+		expect(test_res.startAt).toEqual(newDate)
+	});
+	it("should throw error if Date is not of Date type", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+
+		try {
+			test_res.startAt = 'not a date';
 		} catch (err) {
 			expect(err).toEqual(err);
 		}
