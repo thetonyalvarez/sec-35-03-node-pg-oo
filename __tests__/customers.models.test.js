@@ -69,6 +69,20 @@ describe('Customer Model', () => {
 		const resp = await Customer.get(3);
 		expect(resp.firstName).toEqual('edited_firstName')
 	})
+	it("should search for customer", async () => {
+		const query = {q: 'anthony'}
+		const resp = await Customer.search(query)
+
+		expect(resp[0].lastName).toEqual('Gonzales')
+	})
+	it("should return message if no results found in search", async () => {
+		try {
+			const query = {q: 'nothing'}
+			const resp = await Customer.search(query)
+		} catch (err) {
+			expect(err).toEqual(err);
+		}
+	})
 })
 
 afterAll(async function () {
