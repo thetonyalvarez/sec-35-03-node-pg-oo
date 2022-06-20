@@ -99,11 +99,12 @@ class Customer {
         customers.last_name AS "lastName", 
         customers.phone AS "phone", 
         customers.notes AS "notes",
+        customers.id,
         COUNT(customer_id) total_reservations
       FROM reservations
       INNER JOIN customers
       ON reservations.customer_id = customers.id
-      GROUP BY first_name, last_name, phone, customers.notes, customer_id
+      GROUP BY first_name, last_name, phone, customers.notes, customers.id
       ORDER BY COUNT(customer_id) desc
       LIMIT 10
     `)
