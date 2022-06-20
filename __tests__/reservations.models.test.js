@@ -94,7 +94,28 @@ describe('Reservations Model', () => {
 			expect(err).toEqual(err);
 		}
 	});
+	it("should show customer_id on reservation using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
 
+		expect(test_res.customerId).toEqual(1)
+	});
+	it("should throw error if customer_id tries to be updated on a reservation", async () => {
+		const newReservation = new Reservation({
+			numGuests: 9,
+			startAt: new Date('November 20, 2020 11:13:00'),
+			notes: 'test_notes_new_reservation'
+		});
+
+		newReservation.customerId = 1;
+
+		try {
+			newReservation.customerId = 2;
+		} catch (err) {
+			expect(err).toEqual(err)
+		}
+
+	});
 })
 
 afterAll(async function () {

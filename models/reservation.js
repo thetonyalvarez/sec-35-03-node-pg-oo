@@ -34,6 +34,15 @@ class Reservation {
     this._startAt = date;
   }
 
+  get customerId() {
+    return this._customerId;
+  }
+
+  set customerId(id) {
+    if (this._customerId) throw new Error(`Customer ID for this reservation cannot be changed.`);
+    this._customerId = id;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {
