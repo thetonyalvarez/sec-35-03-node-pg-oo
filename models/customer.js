@@ -14,6 +14,22 @@ class Customer {
     this.notes = notes;
   }
 
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+  
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    if (value === false) {
+      value = '';
+      this._notes = value;
+    }
+    this._notes = value;
+  }
+
   /** find all customers. */
 
   static async all() {
@@ -73,27 +89,6 @@ class Customer {
     }
 
     return new Customer(customer);
-  }
-
-  /** get full name of customer. */
-  static async fullName(id) {
-    const results = await db.query(
-      `
-      SELECT first_name AS "firstName", last_name AS "lastName"
-      FROM customers
-      WHERE id=$1
-      `, [id]
-    )
-
-    if (results.rows[0] === undefined) {
-      const err = new Error(`No such customer: ${id}`);
-      err.status = 404;
-      throw err;
-    }
-
-    const { firstName, lastName } = results.rows[0];
-
-    return [firstName, lastName].join(" ")
   }
 
   /** get top 10 customers */

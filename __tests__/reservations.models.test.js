@@ -24,7 +24,7 @@ describe('Reservations Model', () => {
 		const reservation = new Reservation({
 			customerId: 1,
 			numGuests: 4,
-			startAt: new Date(),
+			startAt: new Date('September 20, 2020 11:13:00'),
 			notes: 'test_notes'
 		});
 
@@ -33,18 +33,100 @@ describe('Reservations Model', () => {
 		const resp = await Reservation.getReservationsForCustomer(1);
 		expect(resp[2].notes).toEqual('test_notes')
 	});
-	it("should update existing reservation", async () => {
+	it("should show notes using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		expect(test_res.notes).toContain('Decade')
+	});
+	it("should update notes using setter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+		
+		test_res.notes = 'updated notes';
+		
+		expect(test_res.notes).toEqual('updated notes')
+	});
+	it("should assign empty string if notes is falsey value", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		test_res.notes = false;
+
+		expect(test_res.notes).toEqual('')
+	});
+	it("should show numGuests using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+		
+		expect(test_res.numGuests).toEqual(3)
+	});
+	it("should update numGuests using setter", async () => {
 		const all_reservations = await Reservation.getReservationsForCustomer(1);
 		const test_res = all_reservations[1];
 		
 		test_res.numGuests = 10;
 		
-		await test_res.save();
-		
-		const resp = await Reservation.getReservationsForCustomer(1);
-		expect(resp[1].numGuests).toEqual(10)
-		expect(resp[1].numGuests).not.toEqual(3)
-	})
+		expect(test_res.numGuests).toEqual(10)
+	});
+	it("should throw error if numGuests is less than 1", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+
+		try {
+			test_res.numGuests = 0;
+		} catch (err) {
+			expect(err).toEqual(err);
+		}
+	});
+	it("should show Date using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		expect(test_res.startAt instanceof Date).toEqual(true)
+	});
+	it("should update Date using setter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[0];
+
+		const newDate = new Date('December 20, 2020 11:13:00');
+
+		test_res.startAt = newDate;
+
+		expect(test_res.startAt).toEqual(newDate)
+	});
+	it("should throw error if Date is not of Date type", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+
+		try {
+			test_res.startAt = 'not a date';
+		} catch (err) {
+			expect(err).toEqual(err);
+		}
+	});
+	it("should show customer_id on reservation using getter", async () => {
+		const all_reservations = await Reservation.getReservationsForCustomer(1);
+		const test_res = all_reservations[1];
+
+		expect(test_res.customerId).toEqual(1)
+	});
+	it("should throw error if customer_id tries to be updated on a reservation", async () => {
+		const newReservation = new Reservation({
+			numGuests: 9,
+			startAt: new Date('November 20, 2020 11:13:00'),
+			notes: 'test_notes_new_reservation'
+		});
+
+		newReservation.customerId = 1;
+
+		try {
+			newReservation.customerId = 2;
+		} catch (err) {
+			expect(err).toEqual(err)
+		}
+
+	});
 })
 
 afterAll(async function () {

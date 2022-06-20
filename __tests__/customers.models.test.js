@@ -32,17 +32,9 @@ describe('Customer Model', () => {
 		}
 	})
 	it("should return full name concatenated together", async () => {
-		const resp = await Customer.fullName(1);
-		expect(resp).toEqual('Anthony Gonzales')
+		const resp = await Customer.get(1);
+		expect(resp.fullName).toEqual('Anthony Gonzales')
 		
-	})
-	it("should show error if no id found for .fullName()", async () => {
-		try {
-			const resp = await Customer.fullName(9999);
-			expect(resp.status).toEqual(404)
-		} catch (err) {
-			expect(err).toEqual(err);
-		}
 	})
 	it("should get reservations for a customer", async () => {
 		const customer = await Customer.get(1);
@@ -78,7 +70,7 @@ describe('Customer Model', () => {
 	it("should return message if no results found in search", async () => {
 		try {
 			const query = {q: 'nothing'}
-			const resp = await Customer.search(query)
+			await Customer.search(query)
 		} catch (err) {
 			expect(err).toEqual(err);
 		}
@@ -88,7 +80,6 @@ describe('Customer Model', () => {
 		const resp = await Customer.topTen()
 		expect(resp[0].firstName).toEqual('FName5')
 		expect(resp[2].firstName).toEqual('Crystal')
-		expect(resp[9].firstName).toEqual('FName12')
 		expect(resp[10]).toBeUndefined()
 	});
 	it("should return all customers if there are not at least 10", async () => {
@@ -97,6 +88,25 @@ describe('Customer Model', () => {
 		expect(resp[2].firstName).toEqual('Joseph')
 		expect(resp[9]).toBeUndefined()
 	})
+	it("should show notes using getter", async () => {
+		const resp = await Customer.get(1);
+
+		expect(resp.notes).toContain('Money')
+	});
+	it("should update notes using setter", async () => {
+		const resp = await Customer.get(1);
+		
+		resp.notes = 'updated notes';
+		
+		expect(resp.notes).toEqual('updated notes')
+	});
+	it("should assign empty string if notes is falsey value", async () => {
+		const resp = await Customer.get(1);
+
+		resp.notes = false;
+
+		expect(resp.notes).toEqual('')
+	});
 })
 
 afterAll(async function () {
